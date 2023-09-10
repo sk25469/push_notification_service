@@ -9,7 +9,7 @@ func SelectSQL(outputField, findingField string) string {
 	return query
 }
 
-func InsertSQL(fields ...string) string {
-	query := fmt.Sprintf("INSERT INTO %v (%v) VALUES ($1, $2)", DB_TABLE_NAME, fields)
+func InsertSQL(field1, field2 string) string {
+	query := fmt.Sprintf("INSERT INTO %v (%v, %v) VALUES ($1, $2)", DB_TABLE_NAME, field1, field2)
 	return query
 }

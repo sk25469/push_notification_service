@@ -36,7 +36,7 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 	db := config.GetPostgresConnection()
 
 	// Insert the user's information into the database
-	_, err = db.Exec(utils.InsertSQL("username", "password"), user.Username, hashedPassword)
+	_, err = db.Exec(utils.InsertSQL("email", "password"), user.Email, hashedPassword)
 	if err != nil {
 		log.Printf("error executing sql insert query: [%v]", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -63,7 +63,7 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	// Query the database to retrieve the user's hashed password
 	// TODO: After logging in, update the last login timestamp to now
 	var hashedPassword string
-	err := db.QueryRow(utils.SelectSQL("password", "username"), user.Username).Scan(&hashedPassword)
+	err := db.QueryRow(utils.SelectSQL("password", "email"), user.Email).Scan(&hashedPassword)
 	if err != nil {
 		log.Printf("error executing sql select query: [%v]", err)
 		if err == sql.ErrNoRows {
@@ -87,7 +87,7 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If authentication is successful, create a JWT token
-	token, err := middleware.CreateJWTToken(user.Username)
+	token, err := middleware.CreateJWTToken(user.Email)
 	if err != nil {
 		log.Printf("error creating JWT Token: [%v]", err)
 		w.WriteHeader(http.StatusInternalServerError)

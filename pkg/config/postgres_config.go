@@ -15,12 +15,13 @@ func InitPostgres() {
 	dbInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		utils.DB_HOST, utils.DB_PORT, utils.DB_USER, utils.DB_PASSWORD, utils.DB_NAME)
 
-	db, err := sql.Open("postgres", dbInfo)
+	var err error
+	conn, err = sql.Open("postgres", dbInfo)
 	if err != nil {
 		log.Println("Error opening database:", err)
 		return
 	}
-	err = db.Ping()
+	err = conn.Ping()
 	if err != nil {
 		log.Println("Error connecting to database:", err)
 		return
